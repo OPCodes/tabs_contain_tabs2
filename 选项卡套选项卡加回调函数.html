@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body,ul { 
+            margin: 0;
+            padding: 0; 
+        }
+        body { 
+            background: #000; 
+        }
+        li { 
+            list-style: none; 
+        }
+        img { 
+            border: none;
+            vertical-align: top;
+             }
+        .clear:after { 
+            content: "";
+            display: block;
+            clear: both; 
+        }
+        #wrap { 
+            margin: 30px auto;
+            padding: 5px;
+            width: 960px;
+            height: 340px;
+            background: #e7e7e7;
+        }
+        #list { 
+            float: left;
+            width: 150px;
+            height: 340px;
+        }
+        #list li { 
+            height: 83px;
+            width: 150px;
+            line-height: 84px;
+            font-size: 20px;
+            text-align: center;
+            color: #000;
+            border: 1px solid #fff;
+            cursor: pointer;
+        }
+        #list li.active { 
+            background: #fff;
+        }
+        #wrap div { 
+            float: left;
+        }
+        #wrap div img {
+            display: none;
+            width: 810px;
+            height: 300px;
+        }
+        #wrap div ul {
+            width: 810px;
+            height: 40px;
+        }
+        #wrap div ul li { 
+            float: left; 
+            height: 40px;
+            border-right:1px solid #fff;
+            line-height: 40px;
+            font-size: 20px;
+            color: #fff;
+            text-align: center;
+            background: #000;
+            cursor: pointer;
+        }
+        #wrap div .ul1 li {
+            width: 269px;
+        }
+        #wrap div .ul2 li {
+            width: 201px;
+        }
+        #wrap div .ul3 li {
+            width: 161px;
+        }
+        #wrap div .ul4 li {
+            width: 201px;
+        }
+        #wrap div ul li.active {
+            background: red;
+        }
+    </style>
+    <script>
+
+        /*
+            需求：实现选项卡嵌套选项卡，二级选项卡的触发事件可以按需进行设置。
+        */
+        
+        function $(obj){
+            return document.getElementById(obj);
+        }
+
+        function action(triObj,contrObj,className,index){
+            for( var i = 0; i < triObj.length; i++ ){
+                triObj[i].className = "";
+                contrObj[i].style.display = "none";
+            }
+            triObj[index].className = className;
+            contrObj[index].style.display = "block";
+        }
+
+        // 一级和二级选项卡都通过这个函数来完成
+        function switch_Tab(triObj,contrObj,evName,className,callBack){
+            for( var i = 0; i < triObj.length; i++ ){
+                triObj[i].index = i;
+                triObj[i][evName] = function (){
+                    action(triObj,contrObj,className,this.index)
+                    callBack && callBack(this.index);
+                }
+            }
+        }
+
+        window.onload = function (){
+
+            var wrap = $("wrap");
+            var list = $("list");
+            var allLis = list.getElementsByTagName("li");
+            var allDivs = wrap.getElementsByTagName("div");
+
+            // 执行switch_Tab切换第一级选项卡
+            switch_Tab(allLis,allDivs,"onclick","active",function (index){
+                  var allImgs = allDivs[index].getElementsByTagName("img");
+                  var allLis = allDivs[index].getElementsByTagName("li");
+                  action(allLis,allImgs,"active",0);
+            });
+            // 获取到所有的二级选项卡的容器
+            var allBox = wrap.getElementsByClassName("box");
+            for( var i = 0; i < allBox.length; i++ ){
+                func(allBox[i],i); // 循环执行func函数
+            }
+            // 将选项卡的容器和索引值传入函数中
+            function func(obj,i){
+                var allImgs = obj.getElementsByTagName("img");
+                var allLis = obj.getElementsByTagName("li");
+                // 选择触发二级选项卡的事件类型
+                if( i < 2 ){
+                    switch_Tab(allLis,allImgs,"onmouseover","active");
+                } else {
+                    switch_Tab(allLis,allImgs,"onclick","active");   
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+<div id="wrap" class="clear">
+    <ul id="list" class="nav">
+        <li class="active">最热团购</li>
+        <li>商城特惠</li>
+        <li>名品推荐</li>
+        <li>缤纷活动</li>
+    </ul>
+    <div class="box" style="display: block;">
+        <img src="img/1.gif" style="display: block;" />
+        <img src="img/2.gif" />
+        <img src="img/3.gif" />
+        <ul class="ul1 list clear">
+            <li class="active">内容一</li>
+            <li>内容二</li>
+            <li>内容三</li>
+        </ul>
+    </div>
+    <div class="box" style="display: none;">
+        <img src="img/1.gif"  style="display: block;" />
+        <img src="img/2.gif" />
+        <img src="img/3.gif" />
+        <img src="img/4.gif" />
+        <ul class="ul2 list clear">
+            <li class="active">内容一</li>
+            <li>内容二</li>
+            <li>内容三</li>
+            <li>内容四</li>
+        </ul>
+    </div>
+    <div class="box" style="display: none;">
+        <img src="img/1.gif"  style="display: block;" />
+        <img src="img/2.gif" />
+        <img src="img/3.gif" />
+        <img src="img/4.gif" />
+        <img src="img/5.gif" />
+        <ul class="ul3 list clear">
+            <li class="active">内容一</li>
+            <li>内容二</li>
+            <li>内容三</li>
+            <li>内容四</li>
+            <li>内容五</li>
+        </ul>
+    </div>
+    <div class="box" style="display: none;">
+        <img src="img/1.gif"  style="display: block;" />
+        <img src="img/2.gif" />
+        <img src="img/3.gif" />
+        <img src="img/4.gif" />
+        <ul class="ul4 list clear">
+            <li class="active">内容一</li>
+            <li>内容二</li>
+            <li>内容三</li>
+            <li>内容四</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
